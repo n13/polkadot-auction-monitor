@@ -33,6 +33,9 @@ const sendMessage = async (notify, message) => {
 var lastAlive = 0
 const sendAlive = async (message) => {
     const now = Date.now()
+    console.log("now "+now)
+    console.log("diff "+(now - lastAlive))
+    console.log("int "+ALIVE_MESSAGE_INTERVAL)
     if (now - lastAlive < ALIVE_MESSAGE_INTERVAL) {
         return
     }
@@ -40,7 +43,7 @@ const sendAlive = async (message) => {
     messageObj = {
         "content": "Auction monitor " + " standings \n" + message
     }        
-    //console.log("sending "+JSON.stringify(messageObj, null, 2)) /// DEBUG
+    console.log("sending "+JSON.stringify(messageObj, null, 2)) /// DEBUG
     await post(webHookURL, messageObj, false)
 }
 
@@ -50,7 +53,8 @@ const monitor = async () => {
         try {
             
             console.log("checking auctions...")
-            
+            await sendMessage(false, "Auction Monitor Starting")
+
             res = await runGetAuctionInfo()
 
             var maxBid = 0
