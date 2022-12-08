@@ -33,9 +33,6 @@ const sendMessage = async (notify, message) => {
 var lastAlive = 0
 const sendAlive = async (message) => {
     const now = Date.now()
-    console.log("now "+now)
-    console.log("diff "+(now - lastAlive))
-    console.log("int "+ALIVE_MESSAGE_INTERVAL)
     if (now - lastAlive < ALIVE_MESSAGE_INTERVAL) {
         return
     }
@@ -49,11 +46,11 @@ const sendAlive = async (message) => {
 
 const monitor = async () => {
 
+    await sendMessage(false, "Auction Monitor Starting")
     while (true) {
         try {
             
             console.log("checking auctions...")
-            await sendMessage(false, "Auction Monitor Starting")
 
             res = await runGetAuctionInfo()
 
