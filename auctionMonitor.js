@@ -69,19 +69,22 @@ const monitor = async () => {
                 }
             })
 
-            console.log("winner: " +winner + " max bid: "+maxBid)
+            if (mapped.length > 0) {
+                console.log("winner: " + winner + " max bid: " + maxBid)
+                var message = ""
+                mapped.forEach(element => {
+                    message = message + element.string + "\n"
+                });
+    
+                const outbid = winner != PARACHAIN_ID_WINNER
 
-            var message = ""
-            mapped.forEach(element => {
-                message = message + element.string + "\n"
-            });
-
-            const outbid = winner != PARACHAIN_ID_WINNER
-            
-            if (outbid) {
-                await sendMessage(true, "We were outbid!" + "\n" + message)
+                if (outbid) {
+                    await sendMessage(true, "We were outbid!" + "\n" + message)
+                } else {
+                    await sendAlive(message)
+                }
             } else {
-                await sendAlive(message)
+                console.log("no live auctions!")
             }
             
             await sleep(CHECK_INTERVAL)
