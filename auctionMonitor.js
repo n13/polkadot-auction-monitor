@@ -20,12 +20,12 @@ const sendMessage = async (notify, message) => {
             messageObj = {
                 "content": "Auction Monitor\n" + message
             }
-        }    
+        }
 
-       //console.log("sending "+JSON.stringify(messageObj, null, 2)) /// DEBUG
+        //console.log("sending "+JSON.stringify(messageObj, null, 2)) /// DEBUG
         await post(webHookURL, messageObj, false)
     } catch (err) {
-        console.error("sendMessage error: "+err)
+        console.error("sendMessage error: " + err)
         throw err
     }
 }
@@ -39,8 +39,8 @@ const sendAlive = async (message) => {
     lastAlive = now
     messageObj = {
         "content": "Auction monitor " + " standings \n" + message
-    }        
-    console.log("sending "+JSON.stringify(messageObj, null, 2)) /// DEBUG
+    }
+    console.log("sending " + JSON.stringify(messageObj, null, 2)) /// DEBUG
     await post(webHookURL, messageObj, false)
 }
 
@@ -49,7 +49,7 @@ const monitor = async () => {
     await sendMessage(false, "Auction Monitor Starting")
     while (true) {
         try {
-            
+
             console.log("checking auctions...")
 
             res = await runGetAuctionInfo()
@@ -57,7 +57,7 @@ const monitor = async () => {
             var maxBid = 0
             var winner = -1
 
-            const mapped  = res.auctions.map(e => {
+            const mapped = res.auctions.map(e => {
                 if (e.amount > maxBid) {
                     maxBid = e.amount
                     winner = e.paraChainId
@@ -75,7 +75,7 @@ const monitor = async () => {
                 mapped.forEach(element => {
                     message = message + element.string + "\n"
                 });
-    
+
                 const outbid = winner != PARACHAIN_ID_WINNER
 
                 if (outbid) {
@@ -86,13 +86,13 @@ const monitor = async () => {
             } else {
                 console.log("no live auctions!")
             }
-            
+
             await sleep(CHECK_INTERVAL)
 
         } catch (err) {
-            console.error("Contract monitor error: "+err)
+            console.error("Contract monitor error: " + err)
 
-            await sendMessage(false, "Contract monitor process error: "+err)
+            await sendMessage(false, "Contract monitor process error: " + err)
 
             await sleep(CHECK_INTERVAL)
         }
